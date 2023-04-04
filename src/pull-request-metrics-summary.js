@@ -1,0 +1,170 @@
+class PullRequestMetricsSummary {
+    constructor(pullRequests, startDate, endDate) {
+        this.pullRequests = pullRequests;
+        this.mergedPRCount = pullRequests.length;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    // uniqueなauthorの数を取得する
+    getUniqueAuthors() {
+        const uniqueAuthors = new Set(this.pullRequests.map((pr) => pr.author));
+        return uniqueAuthors.size;
+    }
+
+    // 最初のコミットからマージされるまでの平均時間を取得する
+    getAverageLeadTime() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const totalLeadTime = this.pullRequests.reduce((total, pr) => total + pr.getLeadTime(), 0);
+        return totalLeadTime / this.pullRequests.length;
+    }
+
+    // PRが作成されてからマージされるまでの平均時間を取得する
+    getAveragePRLeadTime() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const totalPRLeadTime = this.pullRequests.reduce((total, pr) => total + pr.getPRLeadTime(), 0);
+        return totalPRLeadTime / this.pullRequests.length;
+    }
+
+    // 最初のコミットからPRが作成されるまでの平均時間を取得する
+    getAverageFromFirstCommitToPROpen() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const totalFromFirstCommitToPROpen = this.pullRequests.reduce((total, pr) => total + pr.getFromFirstCommitToPROpen(), 0);
+        return totalFromFirstCommitToPROpen / this.pullRequests.length;
+    }
+
+    // PRが作成されてから最初のレビューが行われるまでの平均時間を取得する
+    // レビューのあるPRが1つもない場合は0を返す
+    getAverageFromPROpentoFirstReview() {
+        const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromPROpentoFirstReview() !== null);
+        if (filteredPullRequests.length === 0) { return 0; }
+
+        const totalFromPROpentoFirstReview = filteredPullRequests.reduce((total, pr) => total + pr.getFromPROpentoFirstReview(), 0);
+        return totalFromPROpentoFirstReview / filteredPullRequests.length;
+    }
+
+    // 最初のレビューから最後のapproveが行われるまでの平均時間を取得する
+    // レビューのあるPRが1つもない場合は0を返す
+    getAverageFromFirstRreviewToLastApprovedReview() {
+        const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromFirstReviewToLastApprovedReview() !== null);
+        if (filteredPullRequests.length === 0) { return 0; }
+
+        const totalFromFirstRreviewToLastApprovedReview = filteredPullRequests.reduce((total, pr) => total + pr.getFromFirstReviewToLastApprovedReview(), 0);
+        return totalFromFirstRreviewToLastApprovedReview / filteredPullRequests.length;
+    }
+
+    // 最後のapproveからマージされるまでの平均時間を取得する
+    // レビューのあるPRが1つもない場合は0を返す
+    getAverageFromLastApprovedReviewToMerge() {
+        const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromLastApprovedReviewToMerge() !== null);
+        if (filteredPullRequests.length === 0) { return 0; }
+
+        const totalFromLastApprovedReviewToMerge = filteredPullRequests.reduce((total, pr) => total + pr.getFromLastApprovedReviewToMerge(), 0);
+        return totalFromLastApprovedReviewToMerge / filteredPullRequests.length;
+    }
+
+    // 最初のコミットからマージされるまでの中央値を取得する
+    getMedianLeadTime() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const leadTimes = this.pullRequests.map(pr => pr.getLeadTime());
+        return this.median(leadTimes);
+    }
+
+    // PRが作成されてからマージされるまでの中央値を取得する
+    getMedianPRLeadTime() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const leadTimes = this.pullRequests.map(pr => pr.getPRLeadTime());
+        return this.median(leadTimes);
+    }
+
+    // 最初のコミットからPRが作成されるまでの中央値を取得する
+    getMedianFromFirstCommitToPROpen() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const leadTimes = this.pullRequests.map(pr => pr.getFromFirstCommitToPROpen());
+        return this.median(leadTimes);
+    }
+
+    // PRが作成されてから最初のレビューが行われるまでの中央値を取得する
+    getMedianFromPROpentoFirstReview() {
+        const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromPROpentoFirstReview() !== null);
+        if (filteredPullRequests.length === 0) { return 0; }
+
+        const leadTimes = filteredPullRequests.map(pr => pr.getFromPROpentoFirstReview());
+        return this.median(leadTimes);
+    }
+
+    // 最初のレビューから最後のapproveが行われるまでの中央値を取得する
+    getMedianFromFirstRreviewToLastApprovedReview() {
+        const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromFirstReviewToLastApprovedReview() !== null);
+        if (filteredPullRequests.length === 0) { return 0; }
+
+        const leadTimes = filteredPullRequests.map(pr => pr.getFromFirstReviewToLastApprovedReview());
+        return this.median(leadTimes);
+    }
+
+    // 最後のapproveからマージされるまでの中央値を取得する
+    getMedianFromLastApprovedReviewToMerge() {
+        const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromLastApprovedReviewToMerge() !== null);
+        if (filteredPullRequests.length === 0) { return 0; }
+
+        const leadTimes = filteredPullRequests.map(pr => pr.getFromLastApprovedReviewToMerge());
+        return this.median(leadTimes);
+    }
+
+    // csvのヘッダーを取得する
+    getCsvHeader() {
+        return [
+            'startDate',
+            'endDate',
+            'mergedPRCount',
+            'uniqueAuthorCount',
+            'averageLeadTime',
+            'averagePRLeadTime',
+            'averageFromFirstCommitToPROpen',
+            'averageFromPROpentoFirstReview',
+            'averageFromFirstRreviewToLastApprovedReview',
+            'averageFromLastApprovedReviewToMerge',
+            'medianLeadTime',
+            'medianPRLeadTime',
+            'medianFromFirstCommitToPROpen',
+            'medianFromPROpentoFirstReview',
+            'medianFromFirstRreviewToLastApprovedReview',
+            'medianFromLastApprovedReviewToMerge',
+        ];
+    }
+
+    // csvの1行分のデータを取得する
+    getCsvRowData() {
+        return [
+            this.startDate,
+            this.endDate,
+            this.mergedPRCount,
+            this.getUniqueAuthors(),
+            this.getAverageLeadTime(),
+            this.getAveragePRLeadTime(),
+            this.getAverageFromFirstCommitToPROpen(),
+            this.getAverageFromPROpentoFirstReview(),
+            this.getAverageFromFirstRreviewToLastApprovedReview(),
+            this.getAverageFromLastApprovedReviewToMerge(),
+            this.getMedianLeadTime(),
+            this.getMedianPRLeadTime(),
+            this.getMedianFromFirstCommitToPROpen(),
+            this.getMedianFromPROpentoFirstReview(),
+            this.getMedianFromFirstRreviewToLastApprovedReview(),
+            this.getMedianFromLastApprovedReviewToMerge(),
+        ];
+    }
+
+    // 中央値を取得する
+    median(leadTimes) {
+        if (leadTimes.length === 0) { return 0; }
+        leadTimes.sort((a, b) => a - b);
+        const half = Math.floor(leadTimes.length / 2);
+
+        if (leadTimes.length % 2) {
+            return leadTimes[half];
+        } else {
+            return (leadTimes[half - 1] + leadTimes[half]) / 2;
+        }
+    }
+}
