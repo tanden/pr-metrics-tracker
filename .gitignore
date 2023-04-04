@@ -1,3 +1,6 @@
+# clasp files
+.clasp.json
+
 # Logs
 logs
 *.log
