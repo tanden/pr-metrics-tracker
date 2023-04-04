@@ -1,5 +1,6 @@
 # clasp files
 .clasp.json
+appsscript.json
 
 # Logs
 logs
