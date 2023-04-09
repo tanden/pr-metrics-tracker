@@ -35,7 +35,7 @@ class PullRequestMetricsSummary {
 
     // PRが作成されてから最初のレビューが行われるまでの平均時間を取得する
     // レビューのあるPRが1つもない場合は0を返す
-    getAverageFromPROpentoFirstReview() {
+    getAverageFromPROpenToFirstReview() {
         const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromPROpentoFirstReview() !== null);
         if (filteredPullRequests.length === 0) { return 0; }
 
@@ -85,7 +85,7 @@ class PullRequestMetricsSummary {
     }
 
     // PRが作成されてから最初のレビューが行われるまでの中央値を取得する
-    getMedianFromPROpentoFirstReview() {
+    getMedianFromPROpenToFirstReview() {
         const filteredPullRequests = this.pullRequests.filter(pr => pr.getFromPROpentoFirstReview() !== null);
         if (filteredPullRequests.length === 0) { return 0; }
 
@@ -121,13 +121,13 @@ class PullRequestMetricsSummary {
             'averageLeadTime',
             'averagePRLeadTime',
             'averageFromFirstCommitToPROpen',
-            'averageFromPROpentoFirstReview',
+            'averageFromPROpenToFirstReview',
             'averageFromFirstRreviewToLastApprovedReview',
             'averageFromLastApprovedReviewToMerge',
             'medianLeadTime',
             'medianPRLeadTime',
             'medianFromFirstCommitToPROpen',
-            'medianFromPROpentoFirstReview',
+            'medianFromPROpenToFirstReview',
             'medianFromFirstRreviewToLastApprovedReview',
             'medianFromLastApprovedReviewToMerge',
         ];
@@ -143,13 +143,13 @@ class PullRequestMetricsSummary {
             this.getAverageLeadTime(),
             this.getAveragePRLeadTime(),
             this.getAverageFromFirstCommitToPROpen(),
-            this.getAverageFromPROpentoFirstReview(),
+            this.getAverageFromPROpenToFirstReview(),
             this.getAverageFromFirstRreviewToLastApprovedReview(),
             this.getAverageFromLastApprovedReviewToMerge(),
             this.getMedianLeadTime(),
             this.getMedianPRLeadTime(),
             this.getMedianFromFirstCommitToPROpen(),
-            this.getMedianFromPROpentoFirstReview(),
+            this.getMedianFromPROpenToFirstReview(),
             this.getMedianFromFirstRreviewToLastApprovedReview(),
             this.getMedianFromLastApprovedReviewToMerge(),
         ];
