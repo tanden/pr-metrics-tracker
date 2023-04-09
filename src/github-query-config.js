@@ -3,22 +3,8 @@ function getQueriesFromSheet() {
     const sheet = SpreadsheetApp.openById(sheetId).getSheetByName('query');
     const dataRange = sheet.getDataRange();
     const rawData = dataRange.getValues();
-    rawData.shift();
-    const headers = [
-        'sheetName',
-        'initialDate',
-        'interval',
-        'githubQueryString',
-        'destinationSpreadsheetId',
-    ];
-
-    const formattedData = rawData.map(row => {
-        return row.reduce((obj, value, index) => {
-          obj[headers[index]] = value;
-          return obj;
-        }, {});
-      });
-    return formattedData;
+    rawData.shift(); // remove header
+    return rawData.map(row => new QueryFromSheet(...row));
 }
 
 function generateStartDates(initialDate, interval) {
