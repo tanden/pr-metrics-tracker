@@ -9,4 +9,16 @@ class QueryFromSheet {
     this.githubQueryString = githubQueryString;
     this.destinationSpreadsheetId = destinationSpreadsheetId;
   }
+
+  getStartDates() {
+    const startDate = new Date(this.initialDate);
+    const today = new Date();
+    const dates = [];
+
+    for (let currentDate = startDate; currentDate <= today; currentDate.setDate(currentDate.getDate() + this.interval)) {
+        dates.push(new Date(currentDate));
+    }
+
+    return dates;
+  }
 }
