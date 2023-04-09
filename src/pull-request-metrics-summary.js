@@ -7,7 +7,7 @@ class PullRequestMetricsSummary {
     }
 
     // uniqueなauthorの数を取得する
-    getUniqueAuthors() {
+    getUniqueAuthorCount() {
         const uniqueAuthors = new Set(this.pullRequests.map((pr) => pr.author));
         return uniqueAuthors.size;
     }
@@ -139,7 +139,7 @@ class PullRequestMetricsSummary {
             this.startDate,
             this.endDate,
             this.mergedPRCount,
-            this.getUniqueAuthors(),
+            this.getUniqueAuthorCount(),
             this.getAverageLeadTime(),
             this.getAveragePRLeadTime(),
             this.getAverageFromFirstCommitToPROpen(),
