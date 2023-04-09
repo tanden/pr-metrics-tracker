@@ -1,7 +1,7 @@
 function main() {
     const queries = getQueriesFromSheet();
     for (let query of queries) {
-        const startDates = generateStartDates(query.initialDate, query.interval);
+        const startDates = query.getStartDates();
         const summary = [];
         const interval = query.interval;
         const queryFromSheet = query.githubQueryString;

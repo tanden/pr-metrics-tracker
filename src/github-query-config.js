@@ -6,15 +6,3 @@ function getQueriesFromSheet() {
     rawData.shift(); // remove header
     return rawData.map(row => new QueryFromSheet(...row));
 }
-
-function generateStartDates(initialDate, interval) {
-    const startDate = new Date(initialDate);
-    const today = new Date();
-    const dates = [];
-
-    for (let currentDate = startDate; currentDate <= today; currentDate.setDate(currentDate.getDate() + interval)) {
-        dates.push(new Date(currentDate));
-    }
-
-    return dates;
-}
