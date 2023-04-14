@@ -1,9 +1,10 @@
 class PullRequestMetricsSummary {
-    constructor(pullRequests, startDate, endDate) {
+    constructor(pullRequests, startDate, endDate, interval) {
         this.pullRequests = pullRequests;
         this.mergedPRCount = pullRequests.length;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.inverval = interval;
     }
 
     // uniqueなauthorの数を取得する
@@ -111,6 +112,14 @@ class PullRequestMetricsSummary {
         return this.median(leadTimes);
     }
 
+    getMergedPRCountPerDayPerDeveloper() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const workDays = this.inverval - getDayOff(this.startDate, this.endDate);
+        if (workDays === 0) { return 0; }
+
+        return this.pullRequests.length / workDays / this.getUniqueAuthorCount();
+    }
+
     // csvのヘッダーを取得する
     getCsvHeader() {
         return [
@@ -130,6 +139,7 @@ class PullRequestMetricsSummary {
             'medianFromPROpenToFirstReview',
             'medianFromFirstRreviewToLastApprovedReview',
             'medianFromLastApprovedReviewToMerge',
+            'merged / day / developer'
         ];
     }
 
@@ -152,6 +162,7 @@ class PullRequestMetricsSummary {
             this.getMedianFromPROpenToFirstReview(),
             this.getMedianFromFirstRreviewToLastApprovedReview(),
             this.getMedianFromLastApprovedReviewToMerge(),
+            this.getMergedPRCountPerDayPerDeveloper(),
         ];
     }
 

@@ -3,6 +3,9 @@ class SearchQuery {
         this.startDate = startDate;
         this.endDate = this.calcEndDate(startDate, interval);
         this.periodQuery = this.buildPeriodQuery(startDate, this.endDate);
+        if (interval < 1) {
+            throw new Error('interval must be greater than 0 but ' + interval + ' was given');
+        }
         this.interval = interval;
         this.queryFromSheet = queryFromSheet;
     }
