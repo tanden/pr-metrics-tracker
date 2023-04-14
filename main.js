@@ -8,7 +8,7 @@ function main() {
         for (let startDate of startDates) {
             const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
             const pullRequests = fetchPullRequest(searchQuery.getQuery());
-            const pullRequestMetricsSummary = new PullRequestMetricsSummary(pullRequests, searchQuery.startDate, searchQuery.endDate);
+            const pullRequestMetricsSummary = new PullRequestMetricsSummary(pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
             if (summary.length === 0) {
                 summary.push(pullRequestMetricsSummary.getCsvHeader());
             }
