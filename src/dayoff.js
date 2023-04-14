@@ -1,6 +1,5 @@
 function getDayOff(startDate, endDate) {
     const dayoffs = getWeekends(startDate, endDate) + getJapaneseHolidayCount(startDate, endDate);
-    Logger.log(dayoffs);
     return dayoffs;
 }
 
@@ -27,7 +26,6 @@ function getJapaneseHolidayCount(startDate, endDate) {
         singleEvents: true,
         orderBy: 'startTime'
     });
-    Logger.log(events.items.length);
 
     return events.items.length;
 }
