@@ -6,7 +6,6 @@ function getDayOff(startDate, endDate) {
 function getWeekends(startDate, endDate) {
     const dates = [];
     const currentDate = new Date(startDate);
-    const endDate = new Date(endDate);
 
     while (currentDate <= endDate) {
         dates.push(new Date(currentDate));
