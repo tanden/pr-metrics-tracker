@@ -71,7 +71,7 @@ function fetchPullRequest(searchQuery) {
         const pullRequests = queryResponse.nodes.map((pr) =>
             new PullRequest(
                 pr.title,
-                pr.author.login,
+                pr.author?.login,
                 pr.url,
                 pr.commits.nodes[0].commit.authoredDate,
                 pr.createdAt,
