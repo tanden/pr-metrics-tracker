@@ -8,6 +8,32 @@ class PullRequest {
         this.firstReviewedAt = firstReviewedAt;
         this.lastApprovedReviewedAt = lastApprovedReviewedAt;
         this.mergedAt = mergedAt;
+        this.sortFirstCommittedAt();
+    }
+
+    // 最初のcommitはforce pushによりPROpenや最初のレビュー、最後のレビューより前に行われるとは限らない
+    // 最初のコミットは一番先頭から最後のapproveの後ろまで移動する可能性があるので、バブルソート的にソートして順番を入れ替える
+    sortFirstCommittedAt() {
+        // 最初のコミットがPR作成よりあとになっていたら入れ替える
+        if (this.firstCommittedAt > this.createdAt) {
+            const tmp = this.firstCommittedAt;
+            this.firstCommittedAt = this.createdAt;
+            this.createdAt = tmp;
+        }
+
+        // 最初のコミットが最初のレビューよりあとになっていたら入れ替える
+        if (this.createdAt > this.firstReviewedAt) {
+            const tmp = this.createdAt;
+            this.createdAt = this.firstReviewedAt;
+            this.firstReviewedAt = tmp;
+        }
+
+        // 最初のコミットが最後のapproveよりあとになっていたら入れ替える
+        if (this.firstReviewedAt > this.lastApprovedReviewedAt) {
+            const tmp = this.firstReviewedAt;
+            this.firstReviewedAt = this.lastApprovedReviewedAt;
+            this.lastApprovedReviewedAt = tmp;
+        }
     }
 
     milliToSeconds(durationInMilliSeconds) {
