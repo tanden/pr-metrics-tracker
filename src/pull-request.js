@@ -3,37 +3,38 @@ class PullRequest {
         this.title = title;
         this.author = author;
         this.url = url;
-        this.firstCommittedAt = firstCommittedAt;
-        this.createdAt = createdAt;
-        this.firstReviewedAt = firstReviewedAt;
-        this.lastApprovedReviewedAt = lastApprovedReviewedAt;
+        [
+            this.firstCommittedAt,
+            this.createdAt,
+            this.firstReviewedAt,
+            this.lastApprovedReviewedAt,
+        ] = this.sortFirstCommittedAt(firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt);
         this.mergedAt = mergedAt;
-        this.sortFirstCommittedAt();
     }
 
-    // 最初のcommitはforce pushによりPROpenや最初のレビュー、最後のレビューより前に行われるとは限らない
-    // 最初のコミットは一番先頭から最後のapproveの後ろまで移動する可能性があるので、バブルソート的にソートして順番を入れ替える
-    sortFirstCommittedAt() {
-        // 最初のコミットがPR作成よりあとになっていたら入れ替える
-        if (this.firstCommittedAt > this.createdAt) {
-            const tmp = this.firstCommittedAt;
-            this.firstCommittedAt = this.createdAt;
-            this.createdAt = tmp;
+    // 1st commitはforce pushによりPROpenや1st review、last approve review より前に行われるとは限らない
+    // force commitが実施されたケースを考慮して時系列順に並べ変えることにする
+    // 並び替えると各イベント名と中身が合わなくなってしまうデメリットはあるが、計算結果がマイナスになるのを防ぐためこの方法をとる
+    // force pushがなければ 1st commitが一番最初にくる
+    // 1st commit -> PROpen -> 1st review -> last approve review -> merge
+    // force pushがあれば、以下のパターンのどこかに1st commitが入る
+    // PROpen -> 1st commit -> 1st review -> last approve review -> merge
+    // PROpen -> 1st review -> 1st commit -> last approve review -> merge
+    // PROpen -> 1st review -> last approve review -> 1st commit -> merge
+    sortFirstCommittedAt(firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt) {
+        if (lastApprovedReviewedAt < firstCommittedAt) {
+            return [createdAt, firstReviewedAt, lastApprovedReviewedAt, firstCommittedAt];
         }
 
-        // 最初のコミットが最初のレビューよりあとになっていたら入れ替える
-        if (this.createdAt > this.firstReviewedAt) {
-            const tmp = this.createdAt;
-            this.createdAt = this.firstReviewedAt;
-            this.firstReviewedAt = tmp;
+        if (firstReviewedAt < firstCommittedAt) {
+            return [createdAt, firstReviewedAt, firstCommittedAt, lastApprovedReviewedAt];
         }
 
-        // 最初のコミットが最後のapproveよりあとになっていたら入れ替える
-        if (this.firstReviewedAt > this.lastApprovedReviewedAt) {
-            const tmp = this.firstReviewedAt;
-            this.firstReviewedAt = this.lastApprovedReviewedAt;
-            this.lastApprovedReviewedAt = tmp;
+        if (createdAt < firstCommittedAt) {
+            return [createdAt, firstCommittedAt, firstReviewedAt, lastApprovedReviewedAt];
         }
+
+        return [firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt];
     }
 
     milliToSeconds(durationInMilliSeconds) {
