@@ -14,7 +14,7 @@ class PullRequest {
 
     // 1st commitはforce pushによりPROpenや1st review、last approve review より前に行われるとは限らない
     // force commitが実施されたケースを考慮して時系列順に並べ変えることにする
-    // 並び替えると各イベント名と中身が合わなくなってしまうデメリットはあるが、計算結果がマイナスになるのを防ぐためこの方法をとる
+    // 並び替えると各イベント名と中身が合わなくなってしまうデメリットはあるが、durationの計算結果がマイナスになるのを防ぐためこの方法をとる
     // force pushがなければ 1st commitが一番最初にくる
     // 1st commit -> PROpen -> 1st review -> last approve review -> merge
     // force pushがあれば、以下のパターンのどこかに1st commitが入る
