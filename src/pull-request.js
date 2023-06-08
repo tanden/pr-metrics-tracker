@@ -24,8 +24,8 @@ class PullRequest {
     sortFirstCommittedAt(firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt) {
         const dateFirstCommittedAt = new Date(firstCommittedAt);
         const dateCreatedAt = new Date(createdAt);
-        const dateFirstReviewedAt = new Date(firstReviewedAt);
-        const dateLastApprovedReviewedAt = new Date(lastApprovedReviewedAt);
+        const dateFirstReviewedAt = firstReviewedAt || new Date(firstReviewedAt);
+        const dateLastApprovedReviewedAt = lastApprovedReviewedAt ||  new Date(lastApprovedReviewedAt);
         
         if (dateLastApprovedReviewedAt < dateFirstCommittedAt) {
             return [createdAt, firstReviewedAt, lastApprovedReviewedAt, firstCommittedAt];
