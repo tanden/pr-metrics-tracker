@@ -12,27 +12,27 @@ class PullRequest {
         this.mergedAt = mergedAt;
     }
 
-    // 1st commitはforce pushによりPROpenや1st review、last approve review より前に行われるとは限らない
+    // 1st commitはforce pushによりPROpenや1st review、last approved review より前に行われるとは限らない
     // force commitが実施されたケースを考慮して時系列順に並べ変えることにする
     // 並び替えると各イベント名と中身が合わなくなってしまうデメリットはあるが、durationの計算結果がマイナスになるのを防ぐためこの方法をとる
     // force pushがなければ 1st commitが一番最初にくる
-    // 1st commit -> PROpen -> 1st review -> last approve review -> merge
+    // 1st commit -> PROpen -> 1st review -> last approved review -> merge
     // force pushがあれば、以下のパターンのどこかに1st commitが入る
-    // PROpen -> 1st commit -> 1st review -> last approve review -> merge
-    // PROpen -> 1st review -> 1st commit -> last approve review -> merge
-    // PROpen -> 1st review -> last approve review -> 1st commit -> merge
+    // PROpen -> 1st commit -> 1st review -> last approved review -> merge
+    // PROpen -> 1st review -> 1st commit -> last approved review -> merge
+    // PROpen -> 1st review -> last approved review -> 1st commit -> merge
     sortFirstCommittedAt(firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt) {
         const dateFirstCommittedAt = new Date(firstCommittedAt);
         const dateCreatedAt = new Date(createdAt);
 
-        // コメントのみでmergeした場合は、last approve reviewはundefinedになる
-        // コメントもapproveもなくmergeした場合は、1st reviewもlast approve reviewもundefinedになる
+        // コメントのみでmergeした場合は、last approved reviewはundefinedになる
+        // コメントもapproveもなくmergeした場合は、1st reviewもlast approved reviewもundefinedになる
         // 1st reviewだけundefinedになるケースは存在しない
         const dateFirstReviewedAt = (firstReviewedAt === undefined) ? undefined : new Date(firstReviewedAt);
         const dateLastApprovedReviewedAt = (lastApprovedReviewedAt === undefined) ? undefined : new Date(lastApprovedReviewedAt);
         
         if (dateLastApprovedReviewedAt < dateFirstCommittedAt) {
-            // このケースがtrueの場合、last approve reviewはundefinedではないということ
+            // このケースがtrueの場合、last approved reviewはundefinedではないということ
             // 1st reviewだけundefinedになるケースは存在しないので、createdAt相当でundefinedが返却されることはない
             return [createdAt, firstReviewedAt, lastApprovedReviewedAt, firstCommittedAt];
         }
