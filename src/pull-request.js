@@ -16,21 +16,26 @@ class PullRequest {
     // force commitが実施されたケースを考慮して時系列順に並べ変えることにする
     // 並び替えると各イベント名と中身が合わなくなってしまうデメリットはあるが、durationの計算結果がマイナスになるのを防ぐためこの方法をとる
     // force pushがなければ 1st commitが一番最初にくる
-    // 1st commit -> PROpen -> 1st review -> last approve review -> merge
+    // 1st commit -> PROpen -> 1st review(ない場合がある) -> last approve review（ない場合がある） -> merge
     // force pushがあれば、以下のパターンのどこかに1st commitが入る
-    // PROpen -> 1st commit -> 1st review -> last approve review -> merge
-    // PROpen -> 1st review -> 1st commit -> last approve review -> merge
-    // PROpen -> 1st review -> last approve review -> 1st commit -> merge
+    // PROpen -> 1st commit -> 1st review（ない場合がある） -> last approve review（ない場合がある） -> merge
+    // PROpen -> 1st review（ない場合がある） -> 1st commit -> last approve review（ない場合がある） -> merge
+    // PROpen -> 1st review（ない場合がある） -> last approve review（ない場合がある） -> 1st commit -> merge
     sortFirstCommittedAt(firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt) {
-        if (lastApprovedReviewedAt < firstCommittedAt) {
+        const dateFirstCommittedAt = new Date(firstCommittedAt);
+        const dateCreatedAt = new Date(createdAt);
+        const dateFirstReviewedAt = firstReviewedAt || new Date(firstReviewedAt);
+        const dateLastApprovedReviewedAt = lastApprovedReviewedAt ||  new Date(lastApprovedReviewedAt);
+        
+        if (dateLastApprovedReviewedAt < dateFirstCommittedAt) {
             return [createdAt, firstReviewedAt, lastApprovedReviewedAt, firstCommittedAt];
         }
 
-        if (firstReviewedAt < firstCommittedAt) {
+        if (dateFirstReviewedAt < dateFirstCommittedAt) {
             return [createdAt, firstReviewedAt, firstCommittedAt, lastApprovedReviewedAt];
         }
 
-        if (createdAt < firstCommittedAt) {
+        if (dateCreatedAt < dateFirstCommittedAt) {
             return [createdAt, firstCommittedAt, firstReviewedAt, lastApprovedReviewedAt];
         }
 
