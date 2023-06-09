@@ -12,7 +12,6 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' / ' + sheetName;
     const header = [
         'title',
-        'author',
         'url',
         'firstCommittedAt',
         'PROpenedAt',
@@ -25,7 +24,6 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     const csvDataArray = pullRequests.map((pr) => {
         return [
             pr.title,
-            pr.author,
             pr.url,
             pr.firstCommittedAt,
             pr.createdAt,
@@ -37,7 +35,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
         ];
     });
     // leadTimeで降順に並べ替える
-    csvDataArray.sort((a, b) => b[8] - a[8]);
+    csvDataArray.sort((a, b) => b[7] - a[7]);
     csvDataArray.unshift(header);
 
     writeToSheet(csvDataArray, pullRequestSheetName, destinationSpreadsheetId);
