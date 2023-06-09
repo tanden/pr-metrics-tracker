@@ -9,38 +9,56 @@ function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId) {
 }
 
 function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
-    const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' / ' + sheetName;
-    const header = [
-        'title',
-        'author',
-        'url',
-        'firstCommittedAt',
-        'PROpenedAt',
-        'firstReviewedAt',
-        'lastApprovedReviewedAt',
-        'mergedAt',
-        'leadTime',
-        'PRLeadTime',
-    ];
+    // leadTimeで降順に並べ替える
+    pullRequests.sort((a, b) => b.getLeadTime() - a.getLeadTime());
     const csvDataArray = pullRequests.map((pr) => {
         return [
             pr.title,
-            pr.author,
             pr.url,
             pr.firstCommittedAt,
             pr.createdAt,
             pr.firstReviewedAt,
             pr.lastApprovedReviewedAt,
             pr.mergedAt,
+            secondsToHms(pr.getLeadTime()),
+            secondsToHms(pr.getPRLeadTime()),
             pr.getLeadTime(),
             pr.getPRLeadTime(),
         ];
     });
-    // leadTimeで降順に並べ替える
-    csvDataArray.sort((a, b) => b[8] - a[8]);
+
+    const header = [
+        'title',
+        'url',
+        'firstCommittedAt',
+        'PROpenedAt',
+        'firstReviewedAt',
+        'lastApprovedReviewedAt',
+        'mergedAt',
+        'leadTime:dhms',
+        'PRLeadTime:dhms',
+        'leadTime:seconds',
+        'PRLeadTime:seconds',
+    ];
     csvDataArray.unshift(header);
 
+    const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' pull requests of' + sheetName;
+
     writeToSheet(csvDataArray, pullRequestSheetName, destinationSpreadsheetId);
+}
+
+function secondsToHms(seconds) {
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor(seconds % 86400 / 3600);
+    const m = Math.floor(seconds % 3600 / 60);
+    const s = Math.floor(seconds % 3600 % 60);
+
+    const dDisplay = d > 0 ? d + 'd ' : '';
+    const hDisplay = h > 0 ? h + 'h ' : '';
+    const mDisplay = m > 0 ? m + 'm ' : '';
+    const sDisplay = s > 0 ? s + 's ' : '';
+
+    return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
 function getFormattedDate(date) {
@@ -56,5 +74,5 @@ function getFormattedDate(date) {
 
     year = date.getFullYear();
 
-    return [year, month, day].join('-');
+    return [year, month, day].join('/');
 }
