@@ -42,7 +42,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     ];
     csvDataArray.unshift(header);
 
-    const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' - ' + sheetName;
+    const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' pull requests of' + sheetName;
 
     writeToSheet(csvDataArray, pullRequestSheetName, destinationSpreadsheetId);
 }
