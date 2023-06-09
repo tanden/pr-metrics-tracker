@@ -36,6 +36,8 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
             pr.getPRLeadTime(),
         ];
     });
+    // leadTimeで降順に並べ替える
+    csvDataArray.sort((a, b) => b[8] - a[8]);
     csvDataArray.unshift(header);
 
     writeToSheet(csvDataArray, pullRequestSheetName, destinationSpreadsheetId);
