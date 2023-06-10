@@ -18,7 +18,7 @@ function fetchPullRequest(searchQuery) {
                 login
               }
               repository {
-                nameWithOwner
+                name
               }
               url
               commits(first: 1) {
@@ -75,7 +75,7 @@ function fetchPullRequest(searchQuery) {
             new PullRequest(
                 pr.title,
                 pr.author.login,
-                pr.repository.nameWithOwner,
+                pr.repository.name,
                 pr.url,
                 pr.commits.nodes[0].commit.authoredDate,
                 pr.createdAt,
