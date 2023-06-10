@@ -77,7 +77,7 @@ function fetchPullRequest(searchQuery) {
                 pr.author?.login,
                 pr.repository.name,
                 pr.url,
-                pr.commits.nodes[0].commit.authoredDate,
+                pr.commits.nodes[0]?.commit.authoredDate,
                 pr.createdAt,
                 pr.firstReview.nodes[0]?.createdAt,
                 pr.lastApprovedReview.nodes[0]?.createdAt,
