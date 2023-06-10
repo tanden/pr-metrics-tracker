@@ -16,15 +16,15 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
             pr.title,
             pr.repositoryName,
             pr.url,
+            secondsToHms(pr.getLeadTime()),
+            secondsToHms(pr.getPRLeadTime()),
+            pr.getLeadTime(),
+            pr.getPRLeadTime(),
             pr.firstCommittedAt,
             pr.createdAt,
             pr.firstReviewedAt,
             pr.lastApprovedReviewedAt,
             pr.mergedAt,
-            secondsToHms(pr.getLeadTime()),
-            secondsToHms(pr.getPRLeadTime()),
-            pr.getLeadTime(),
-            pr.getPRLeadTime(),
         ];
     });
 
@@ -32,15 +32,15 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
         'title',
         'repositoryName',
         'url',
+        'leadTime:dhms',
+        'PRLeadTime:dhms',
+        'leadTime:seconds',
+        'PRLeadTime:seconds',
         'firstCommittedAt',
         'PROpenedAt',
         'firstReviewedAt',
         'lastApprovedReviewedAt',
         'mergedAt',
-        'leadTime:dhms',
-        'PRLeadTime:dhms',
-        'leadTime:seconds',
-        'PRLeadTime:seconds',
     ];
     csvDataArray.unshift(header);
 
