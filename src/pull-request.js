@@ -1,7 +1,8 @@
 class PullRequest {
-    constructor(title, author, url, firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt, mergedAt) {
+    constructor(title, author, repositoryName, url, firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt, mergedAt) {
         this.title = title;
         this.author = author;
+        this.repositoryName = repositoryName;
         this.url = url;
         [
             this.firstCommittedAt,
