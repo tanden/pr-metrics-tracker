@@ -14,6 +14,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     const csvDataArray = pullRequests.map((pr) => {
         return [
             pr.title,
+            pr.repositoryName,
             pr.url,
             pr.firstCommittedAt,
             pr.createdAt,
@@ -29,6 +30,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
 
     const header = [
         'title',
+        'repositoryName',
         'url',
         'firstCommittedAt',
         'PROpenedAt',
