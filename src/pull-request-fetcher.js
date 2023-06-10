@@ -71,19 +71,21 @@ function fetchPullRequest(searchQuery) {
         hasNextPage = queryResponse.pageInfo.hasNextPage;
         endCursor = queryResponse.pageInfo.endCursor;
 
-        const pullRequests = queryResponse.nodes.map((pr) =>
-            new PullRequest(
-                pr.title,
-                pr.author?.login,
-                pr.repository.name,
-                pr.url,
-                pr.commits.nodes[0].commit.authoredDate,
-                pr.createdAt,
-                pr.firstReview.nodes[0]?.createdAt,
-                pr.lastApprovedReview.nodes[0]?.createdAt,
-                pr.mergedAt,
-            )
-        );
+        const pullRequests = queryResponse.nodes
+            .filter((pr) => pr.commits.nodes.length > 0)
+            .map((pr) =>
+                new PullRequest(
+                    pr.title,
+                    pr.author?.login,
+                    pr.repository.name,
+                    pr.url,
+                    pr.commits.nodes[0].commit.authoredDate,
+                    pr.createdAt,
+                    pr.firstReview.nodes[0]?.createdAt,
+                    pr.lastApprovedReview.nodes[0]?.createdAt,
+                    pr.mergedAt,
+                )
+            );
         result.push(...pullRequests);
     }
 
