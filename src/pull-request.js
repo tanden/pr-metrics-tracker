@@ -31,7 +31,7 @@ class PullRequest {
         // 1st reviewだけundefinedになるケースは存在しない
         const dateFirstReviewedAt = (firstReviewedAt === undefined) ? undefined : new Date(firstReviewedAt);
         const dateLastApprovedReviewedAt = (lastApprovedReviewedAt === undefined) ? undefined : new Date(lastApprovedReviewedAt);
-        
+
         if (dateLastApprovedReviewedAt < dateFirstCommittedAt) {
             // このケースがtrueの場合、last approved reviewはundefinedではないということ
             // 1st reviewだけundefinedになるケースは存在しないので、createdAt相当でundefinedが返却されることはない
