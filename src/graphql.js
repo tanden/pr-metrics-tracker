@@ -9,7 +9,7 @@ function callGraphQL(query, queryVariables) {
         },
         payload: JSON.stringify({ query: query, variables: queryVariables }),
     };
-    
+
     const response = UrlFetchApp.fetch(GITHUB_GQL_API_URL, requestOptions);
     return JSON.parse(response.getContentText());
 }
