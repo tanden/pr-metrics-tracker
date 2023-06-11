@@ -22,4 +22,3 @@ class QueryFromSheet {
         return dates;
     }
 }
-ß
