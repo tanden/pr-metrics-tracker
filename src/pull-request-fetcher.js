@@ -14,6 +14,7 @@ function fetchPullRequest(searchQuery) {
           nodes {
             ... on PullRequest {
               title
+              headRefName
               author {
                 login
               }
@@ -78,6 +79,7 @@ function fetchPullRequest(searchQuery) {
             .map((pr) =>
                 new PullRequest(
                     pr.title,
+                    pr.headRefName,
                     pr.author?.login,
                     pr.repository.name,
                     pr.url,
