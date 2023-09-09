@@ -1,9 +1,23 @@
 class PullRequest {
-    constructor(title, author, repositoryName, url, firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt, mergedAt) {
+    constructor(
+        title,
+        author,
+        repositoryName,
+        url,
+        addtions,
+        deletions,
+        firstCommittedAt,
+        createdAt,
+        firstReviewedAt,
+        lastApprovedReviewedAt,
+        mergedAt
+    ) {
         this.title = title;
         this.author = author;
         this.repositoryName = repositoryName;
         this.url = url;
+        this.addtions = addtions;
+        this.deletions = deletions;
         [
             this.firstCommittedAt,
             this.createdAt,
@@ -97,5 +111,17 @@ class PullRequest {
         }
         const duration = new Date(this.mergedAt) - new Date(this.lastApprovedReviewedAt);
         return this.milliToSeconds(duration);
+    }
+
+    getAdditions() {
+        return this.addtions
+    }
+
+    getDeletions() {
+        return this.deletions
+    }
+
+    getModifiedLines() {
+        return this.addtions + this.deletions
     }
 }

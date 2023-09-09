@@ -120,6 +120,24 @@ class PullRequestMetricsSummary {
         return this.pullRequests.length / workDays / this.getUniqueAuthorCount();
     }
 
+    getAverageAdditions() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const totalAdditions = this.pullRequests.reduce((total, pr) => total + pr.getAdditions(), 0);
+        return totalAdditions / this.pullRequests.length;
+    }
+
+    getAverageDeletions() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const totalDeletions = this.pullRequests.reduce((total, pr) => total + pr.getDeletions(), 0);
+        return totalDeletions / this.pullRequests.length;
+    }
+
+    getAverageModifiedLines() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const totalModifiedLines = this.pullRequests.reduce((total, pr) => total + pr.getModifiedLines(), 0);
+        return totalModifiedLines / this.pullRequests.length;
+    }
+
     // csvのヘッダーを取得する
     getCsvHeader() {
         return [
@@ -139,6 +157,9 @@ class PullRequestMetricsSummary {
             'medianFromPROpenToFirstReview',
             'medianFromFirstRreviewToLastApprovedReview',
             'medianFromLastApprovedReviewToMerge',
+            'averageAdditions',
+            'averageDeletions',
+            'averageModifiedLines',
             'merged / day / developer'
         ];
     }
@@ -162,6 +183,9 @@ class PullRequestMetricsSummary {
             this.getMedianFromPROpenToFirstReview(),
             this.getMedianFromFirstRreviewToLastApprovedReview(),
             this.getMedianFromLastApprovedReviewToMerge(),
+            this.getAverageAdditions(),
+            this.getAverageDeletions(),
+            this.getAverageModifiedLines(),
             this.getMergedPRCountPerDayPerDeveloper(),
         ];
     }
