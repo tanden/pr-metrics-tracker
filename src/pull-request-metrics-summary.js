@@ -138,6 +138,24 @@ class PullRequestMetricsSummary {
         return totalModifiedLines / this.pullRequests.length;
     }
 
+    getMedianAdditions() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const additions = this.pullRequests.map(pr => pr.getAdditions());
+        return this.median(additions);
+    }
+
+    getMedianDeletions() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const deletions = this.pullRequests.map(pr => pr.getDeletions());
+        return this.median(deletions);
+    }
+
+    getMedianModifiedLines() {
+        if (this.pullRequests.length === 0) { return 0; }
+        const modifiedLines = this.pullRequests.map(pr => pr.getModifiedLines());
+        return this.median(modifiedLines);
+    }
+
     // csvのヘッダーを取得する
     getCsvHeader() {
         return [
@@ -160,6 +178,9 @@ class PullRequestMetricsSummary {
             'averageAdditions',
             'averageDeletions',
             'averageModifiedLines',
+            'medianAdditions',
+            'medianDeletions',
+            'medianModifiedLines',
             'merged / day / developer'
         ];
     }
@@ -186,6 +207,9 @@ class PullRequestMetricsSummary {
             this.getAverageAdditions(),
             this.getAverageDeletions(),
             this.getAverageModifiedLines(),
+            this.getMedianAdditions(),
+            this.getMedianDeletions(),
+            this.getMedianModifiedLines(),
             this.getMergedPRCountPerDayPerDeveloper(),
         ];
     }
