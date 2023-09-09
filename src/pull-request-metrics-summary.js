@@ -156,64 +156,6 @@ class PullRequestMetricsSummary {
         return this.median(modifiedLines);
     }
 
-    // csvのヘッダーを取得する
-    getCsvHeader() {
-        return [
-            'startDate',
-            'endDate',
-            'mergedPRCount',
-            'uniqueAuthorCount',
-            'averageLeadTime',
-            'averagePRLeadTime',
-            'averageFromFirstCommitToPROpen',
-            'averageFromPROpenToFirstReview',
-            'averageFromFirstRreviewToLastApprovedReview',
-            'averageFromLastApprovedReviewToMerge',
-            'medianLeadTime',
-            'medianPRLeadTime',
-            'medianFromFirstCommitToPROpen',
-            'medianFromPROpenToFirstReview',
-            'medianFromFirstRreviewToLastApprovedReview',
-            'medianFromLastApprovedReviewToMerge',
-            'averageAdditions',
-            'averageDeletions',
-            'averageModifiedLines',
-            'medianAdditions',
-            'medianDeletions',
-            'medianModifiedLines',
-            'merged / day / developer'
-        ];
-    }
-
-    // csvの1行分のデータを取得する
-    getCsvRowData() {
-        return [
-            this.startDate,
-            this.endDate,
-            this.mergedPRCount,
-            this.getUniqueAuthorCount(),
-            this.getAverageLeadTime(),
-            this.getAveragePRLeadTime(),
-            this.getAverageFromFirstCommitToPROpen(),
-            this.getAverageFromPROpenToFirstReview(),
-            this.getAverageFromFirstRreviewToLastApprovedReview(),
-            this.getAverageFromLastApprovedReviewToMerge(),
-            this.getMedianLeadTime(),
-            this.getMedianPRLeadTime(),
-            this.getMedianFromFirstCommitToPROpen(),
-            this.getMedianFromPROpenToFirstReview(),
-            this.getMedianFromFirstRreviewToLastApprovedReview(),
-            this.getMedianFromLastApprovedReviewToMerge(),
-            this.getAverageAdditions(),
-            this.getAverageDeletions(),
-            this.getAverageModifiedLines(),
-            this.getMedianAdditions(),
-            this.getMedianDeletions(),
-            this.getMedianModifiedLines(),
-            this.getMergedPRCountPerDayPerDeveloper(),
-        ];
-    }
-
     // 中央値を取得する
     median(leadTimes) {
         if (leadTimes.length === 0) { return 0; }
