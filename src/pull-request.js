@@ -131,7 +131,7 @@ class PullRequest {
 
     isEpic() {
         const pattern =  /epic[^/]*\//;
-        return pattern.test(this.headRefName);
+        return pattern.test(this.branchName);
     }
 
     isNotEpic() {
