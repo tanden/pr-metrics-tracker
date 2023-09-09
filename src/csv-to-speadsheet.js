@@ -30,6 +30,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
             pr.getAdditions(),
             pr.getDeletions(),
             pr.getModifiedLines(),
+            pr.isEpic(),
         ];
     });
 
@@ -51,6 +52,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
         'additions',
         'deletions',
         'modifiedLines',
+        'isEpic',
     ];
     csvDataArray.unshift(header);
 
