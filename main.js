@@ -14,10 +14,11 @@ function main() {
                 writePullRequestsToSheet(pullRequests, startDate, query.sheetName, query.destinationSpreadsheetId);
             }
             const pullRequestMetricsSummary = new PullRequestMetricsSummary(pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
+            const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
             if (summary.length === 0) {
-                summary.push(pullRequestMetricsSummary.getCsvHeader());
+                summary.push(metricsSummaryCsvMapper.getCsvHeader());
             }
-            summary.push(pullRequestMetricsSummary.getCsvRowData());
+            summary.push(metricsSummaryCsvMapper.getCsvRowData());
         }
         writeToSheet(summary, query.sheetName, query.destinationSpreadsheetId);
     }
