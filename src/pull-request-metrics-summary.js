@@ -1,7 +1,8 @@
 class PullRequestMetricsSummary {
-    constructor(pullRequests, startDate, endDate, interval) {
+    constructor(pullRequests, skippedPullRequest, startDate, endDate, interval) {
         this.pullRequests = pullRequests;
         this.mergedPRCount = pullRequests.length;
+        this.skippedPRCount = skippedPullRequest.length;
         this.startDate = startDate;
         this.endDate = endDate;
         this.inverval = interval;
