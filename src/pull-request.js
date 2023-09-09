@@ -126,4 +126,9 @@ class PullRequest {
     getModifiedLines() {
         return this.addtions + this.deletions
     }
+
+    isNotEpic() {
+        const pattern =  /epic[^/]*\//;
+        return !pattern.test(this.headRefName);
+    }
 }
