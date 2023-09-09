@@ -27,6 +27,9 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
             pr.firstReviewedAt,
             pr.lastApprovedReviewedAt,
             pr.mergedAt,
+            pr.getAdditions(),
+            pr.getDeletions(),
+            pr.getModifiedLines(),
         ];
     });
 
@@ -45,6 +48,9 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
         'firstReviewedAt',
         'lastApprovedReviewedAt',
         'mergedAt',
+        'additions',
+        'deletions',
+        'modifiedLines',
     ];
     csvDataArray.unshift(header);
 
