@@ -21,6 +21,8 @@ function fetchPullRequest(searchQuery) {
                 name
               }
               url
+              additions
+              deletions
               commits(first: 1) {
                 nodes {
                   commit {
@@ -79,6 +81,8 @@ function fetchPullRequest(searchQuery) {
                     pr.author?.login,
                     pr.repository.name,
                     pr.url,
+                    pr.additions,
+                    pr.deletions,
                     pr.commits.nodes[0].commit.authoredDate,
                     pr.createdAt,
                     pr.firstReview.nodes[0]?.createdAt,
