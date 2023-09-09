@@ -14,6 +14,8 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     const csvDataArray = pullRequests.map((pr) => {
         return [
             pr.title,
+            pr.baseBranchName,
+            pr.branchName,
             pr.repositoryName,
             pr.url,
             secondsToHms(pr.getLeadTime()),
@@ -30,6 +32,8 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
 
     const header = [
         'title',
+        'baseBranchName',
+        'branchName',
         'repositoryName',
         'url',
         'leadTime:dhms',
