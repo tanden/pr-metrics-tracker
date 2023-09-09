@@ -1,6 +1,7 @@
 class PullRequest {
     constructor(
         title,
+        baseRefName,
         headRefName,
         author,
         repositoryName,
@@ -14,7 +15,8 @@ class PullRequest {
         mergedAt
     ) {
         this.title = title;
-        this.headRefName = headRefName;
+        this.baseBranchName = baseRefName;
+        this.branchName = headRefName;
         this.author = author;
         this.repositoryName = repositoryName;
         this.url = url;
