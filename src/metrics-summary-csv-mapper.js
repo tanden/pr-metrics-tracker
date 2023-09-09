@@ -28,7 +28,8 @@ class MetricsSummaryCsvMapper {
             'medianAdditions',
             'medianDeletions',
             'medianModifiedLines',
-            'merged / day / developer'
+            'merged / day / developer',
+            'skippedPRCount',
         ];
     }
 
@@ -58,6 +59,7 @@ class MetricsSummaryCsvMapper {
             this.metricsSummary.getMedianDeletions(),
             this.metricsSummary.getMedianModifiedLines(),
             this.metricsSummary.getMergedPRCountPerDayPerDeveloper(),
+            this.metricsSummary.skippedPRCount,
         ];
     }
 }

@@ -127,8 +127,12 @@ class PullRequest {
         return this.addtions + this.deletions
     }
 
-    isNotEpic() {
+    isEpic() {
         const pattern =  /epic[^/]*\//;
-        return !pattern.test(this.headRefName);
+        return pattern.test(this.headRefName);
+    }
+
+    isNotEpic() {
+        return !this.isEpic();
     }
 }
