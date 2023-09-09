@@ -68,21 +68,21 @@ class PullRequestMetricsSummary {
     getMedianLeadTime() {
         if (this.pullRequests.length === 0) { return 0; }
         const leadTimes = this.pullRequests.map(pr => pr.getLeadTime());
-        return this.median(leadTimes);
+        return median(leadTimes);
     }
 
     // PRが作成されてからマージされるまでの中央値を取得する
     getMedianPRLeadTime() {
         if (this.pullRequests.length === 0) { return 0; }
         const leadTimes = this.pullRequests.map(pr => pr.getPRLeadTime());
-        return this.median(leadTimes);
+        return median(leadTimes);
     }
 
     // 最初のコミットからPRが作成されるまでの中央値を取得する
     getMedianFromFirstCommitToPROpen() {
         if (this.pullRequests.length === 0) { return 0; }
         const leadTimes = this.pullRequests.map(pr => pr.getFromFirstCommitToPROpen());
-        return this.median(leadTimes);
+        return median(leadTimes);
     }
 
     // PRが作成されてから最初のレビューが行われるまでの中央値を取得する
@@ -91,7 +91,7 @@ class PullRequestMetricsSummary {
         if (filteredPullRequests.length === 0) { return 0; }
 
         const leadTimes = filteredPullRequests.map(pr => pr.getFromPROpentoFirstReview());
-        return this.median(leadTimes);
+        return median(leadTimes);
     }
 
     // 最初のレビューから最後のapproveが行われるまでの中央値を取得する
@@ -100,7 +100,7 @@ class PullRequestMetricsSummary {
         if (filteredPullRequests.length === 0) { return 0; }
 
         const leadTimes = filteredPullRequests.map(pr => pr.getFromFirstReviewToLastApprovedReview());
-        return this.median(leadTimes);
+        return median(leadTimes);
     }
 
     // 最後のapproveからマージされるまでの中央値を取得する
@@ -109,7 +109,7 @@ class PullRequestMetricsSummary {
         if (filteredPullRequests.length === 0) { return 0; }
 
         const leadTimes = filteredPullRequests.map(pr => pr.getFromLastApprovedReviewToMerge());
-        return this.median(leadTimes);
+        return median(leadTimes);
     }
 
     getMergedPRCountPerDayPerDeveloper() {
@@ -141,31 +141,18 @@ class PullRequestMetricsSummary {
     getMedianAdditions() {
         if (this.pullRequests.length === 0) { return 0; }
         const additions = this.pullRequests.map(pr => pr.getAdditions());
-        return this.median(additions);
+        return median(additions);
     }
 
     getMedianDeletions() {
         if (this.pullRequests.length === 0) { return 0; }
         const deletions = this.pullRequests.map(pr => pr.getDeletions());
-        return this.median(deletions);
+        return median(deletions);
     }
 
     getMedianModifiedLines() {
         if (this.pullRequests.length === 0) { return 0; }
         const modifiedLines = this.pullRequests.map(pr => pr.getModifiedLines());
-        return this.median(modifiedLines);
-    }
-
-    // 中央値を取得する
-    median(leadTimes) {
-        if (leadTimes.length === 0) { return 0; }
-        leadTimes.sort((a, b) => a - b);
-        const half = Math.floor(leadTimes.length / 2);
-
-        if (leadTimes.length % 2) {
-            return leadTimes[half];
-        } else {
-            return (leadTimes[half - 1] + leadTimes[half]) / 2;
-        }
+        return median(modifiedLines);
     }
 }
