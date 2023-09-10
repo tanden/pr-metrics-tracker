@@ -8,8 +8,16 @@ function callGraphQL(query, queryVariables) {
             'Authorization': `Bearer ${GITHUB_PAT}`,
         },
         payload: JSON.stringify({ query: query, variables: queryVariables }),
+        timeout: 60000,
+        muteHttpExceptions: false,
     };
 
-    const response = UrlFetchApp.fetch(GITHUB_GQL_API_URL, requestOptions);
-    return JSON.parse(response.getContentText());
+    try {
+        const response = UrlFetchApp.fetch(GITHUB_GQL_API_URL, requestOptions);
+        return JSON.parse(response.getContentText());
+    } catch (e) {
+        Logger.log(e.messege);
+        Logger.log(e.stack);
+        throw e;
+    }
 }
