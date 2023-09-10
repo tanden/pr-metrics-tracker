@@ -6,7 +6,7 @@ function fetchPullRequest(searchQuery) {
     while (hasNextPage) {
         const query = `
       query($endCursor: String) {
-        search(type: ISSUE, first: 100, query: "${searchQuery}", after: $endCursor) {
+        search(type: ISSUE, first: 50, query: "${searchQuery}", after: $endCursor) {
           pageInfo {
             hasNextPage
             endCursor
