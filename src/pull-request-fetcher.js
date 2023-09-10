@@ -33,6 +33,16 @@ function fetchPullRequest(searchQuery) {
                 }
               }
               createdAt
+              timelineItems: timelineItems(last: 1, itemTypes: READY_FOR_REVIEW_EVENT) {
+                edges {
+                  node {
+                    ... on ReadyForReviewEvent {
+                      url
+                      createdAt
+                    }
+                  }
+                }
+              }
               firstReview: reviews(first: 1) {
                 nodes {
                   createdAt
@@ -89,6 +99,7 @@ function fetchPullRequest(searchQuery) {
                     pr.deletions,
                     pr.commits.nodes[0].commit.authoredDate,
                     pr.createdAt,
+                    pr.timelineItems?.edges[0]?.node?.createdAt,
                     pr.firstReview.nodes[0]?.createdAt,
                     pr.lastApprovedReview.nodes[0]?.createdAt,
                     pr.mergedAt,
