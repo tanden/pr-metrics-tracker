@@ -11,7 +11,7 @@ function main() {
             const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
             const pullRequests = fetchPullRequest(searchQuery.getQuery());
             iterationCounter++;
-            if (iterationCounter === startDates.length) {
+            if ( iterationCounter === (startDates.length - 1) || iterationCounter === startDates.length) {
                 writePullRequestsToSheet(pullRequests, startDate, query.sheetName, query.destinationSpreadsheetId);
             }
             const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery);
