@@ -10,6 +10,7 @@ class PullRequest {
         deletions,
         firstCommittedAt,
         createdAt,
+        readyForReviewAt,
         firstReviewedAt,
         lastApprovedReviewedAt,
         mergedAt
@@ -28,6 +29,8 @@ class PullRequest {
             this.firstReviewedAt,
             this.lastApprovedReviewedAt,
         ] = this.sortFirstCommittedAt(firstCommittedAt, createdAt, firstReviewedAt, lastApprovedReviewedAt);
+        // ToDo: readyForReaviewAtを使ってリードタイムをどう計算するのかを検討する
+        this.readyForReviewAt = readyForReviewAt;
         this.mergedAt = mergedAt;
     }
 
