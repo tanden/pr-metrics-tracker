@@ -23,6 +23,20 @@ class QueryFromSheet {
         return dates;
     }
 
+    getStartDateAsArray() {
+        return [new Date(this.initialDate)];
+    }
+
+    getStartDate() {
+      return new Date(this.initialDate);
+    }
+
+    getEndDate() {
+        const endDate = new Date(this.initialDate);
+        endDate.setDate(endDate.getDate() + (this.interval - 1));
+        return endDate;
+    }
+
     getIsSkipEpic() {
         if (this.isSkipEpic === undefined) {
             return false;
