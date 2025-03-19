@@ -1,0 +1,28 @@
+  function getCsvHeader() {
+        return [
+            'startDate',
+            'endDate',
+            'mergedPRCount',
+            'uniqueAuthorCount',
+            'averageLeadTime',
+            'averagePRLeadTime',
+            'averageFromFirstCommitToPROpen',
+            'averageFromPROpenToFirstReview',
+            'averageFromFirstRreviewToLastApprovedReview',
+            'averageFromLastApprovedReviewToMerge',
+            'medianLeadTime',
+            'medianPRLeadTime',
+            'medianFromFirstCommitToPROpen',
+            'medianFromPROpenToFirstReview',
+            'medianFromFirstRreviewToLastApprovedReview',
+            'medianFromLastApprovedReviewToMerge',
+            'averageAdditions',
+            'averageDeletions',
+            'averageModifiedLines',
+            'medianAdditions',
+            'medianDeletions',
+            'medianModifiedLines',
+            'merged / day / developer',
+            'skippedPRCount',
+        ];
+}

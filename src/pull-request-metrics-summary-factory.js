@@ -1,20 +1,20 @@
 class PullRequestMetricsSummaryFactory {
-    static create(isSkipEpic, pullRequests, searchQuery) {
+    static create(isSkipEpic, pullRequests, startDate, endDate, interval) {
         if (isSkipEpic) {
             return new PullRequestMetricsSummary(
                 pullRequests.filter(pr => pr.isNotEpic()),
                 pullRequests.filter(pr => pr.isEpic()),
-                searchQuery.startDate,
-                searchQuery.endDate,
-                searchQuery.interval
+                startDate,
+                endDate,
+                interval
             );
         } else {
             return new PullRequestMetricsSummary(
                 pullRequests,
                 [],
-                searchQuery.startDate,
-                searchQuery.endDate,
-                searchQuery.interval
+                startDate,
+                endDate,
+                interval
             );
         }
     }

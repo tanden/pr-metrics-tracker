@@ -14,13 +14,36 @@ function main() {
             if ( iterationCounter === (startDates.length - 1) || iterationCounter === startDates.length) {
                 writePullRequestsToSheet(pullRequests, startDate, query.sheetName, query.destinationSpreadsheetId);
             }
-            const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery);
+            const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
             const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
             if (summary.length === 0) {
-                summary.push(metricsSummaryCsvMapper.getCsvHeader());
+                summary.push(getCsvHeader());
             }
             summary.push(metricsSummaryCsvMapper.getCsvRowData());
         }
         writeToSheet(summary, query.sheetName, query.destinationSpreadsheetId);
     }
+}
+
+function getMonthlyReport() {
+    const queries = getQueriesFromSheet();
+    const summary = [];
+    summary.push(getCsvHeader());
+    const pullRequests = [];
+    for (let query of queries) {
+        const startDates = query.getStartDateAsArray();
+        const interval = query.interval;
+        const queryFromSheet = query.githubQueryString;
+        for (let startDate of startDates) {
+            const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
+            pullRequests.push(...fetchPullRequest(searchQuery.getQuery()));
+        }
+    }
+    const isSkipEpic = true;
+    const exQuery = queries[0];
+    const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, exQuery.getStartDate(), exQuery.getEndDate(), exQuery.interval);
+    const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
+    summary.push(metricsSummaryCsvMapper.getCsvRowData());
+    writePullRequestsToSheet(pullRequests, exQuery.getStartDate(), exQuery.sheetName, exQuery.destinationSpreadsheetId);
+    writeToSheet(summary, exQuery.sheetName + '_monthly_report', exQuery.destinationSpreadsheetId);
 }
