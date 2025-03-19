@@ -32,9 +32,9 @@ class QueryFromSheet {
     }
 
     getEndDate() {
-        const endDate = new Date(this.initialDate);
-        endDate.setDate(endDate.getDate() + (this.interval - 1));
-        return endDate;
+        const startDate = new Date(this.initialDate);
+        const endDate = new Date(startDate);
+        return endDate.setDate(endDate.getDate() + (this.interval - 1));
     }
 
     getIsSkipEpic() {
