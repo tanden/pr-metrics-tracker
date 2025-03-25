@@ -6,6 +6,7 @@ function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId, startLi
     }
     sheet.clear();
     sheet.getRange(startLine, 1, csvDataArray.length, csvDataArray[0].length).setValues(csvDataArray);
+    sheet.getRange(startLine, 1, 1, csvDataArray[0].length).setBackgroundColor('#ADD8E6');
 }
 
 function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
