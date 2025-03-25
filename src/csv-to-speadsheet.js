@@ -8,6 +8,57 @@ function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId) {
     sheet.getRange(1, 1, csvDataArray.length, csvDataArray[0].length).setValues(csvDataArray);
 }
 
+function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
+    // leadTimeで降順に並べ替える
+    pullRequests.sort((a, b) => b.getLeadTime() - a.getLeadTime());
+    const csvDataArray = pullRequests.map((pr) => {
+        return [
+            pr.title,
+            pr.repositoryName,
+            pr.baseBranchName,
+            pr.branchName,
+            pr.url,
+            secondsToHms(pr.getLeadTime()),
+            secondsToHms(pr.getPRLeadTime()),
+            pr.getLeadTime(),
+            pr.getPRLeadTime(),
+            pr.firstCommittedAt,
+            pr.createdAt,
+            pr.firstReviewedAt,
+            pr.lastApprovedReviewedAt,
+            pr.mergedAt,
+            pr.getAdditions(),
+            pr.getDeletions(),
+            pr.getModifiedLines(),
+            pr.isEpic(),
+        ];
+    });
+
+    const header = [
+        'title',
+        'repositoryName',
+        'baseBranchName',
+        'branchName',
+        'url',
+        'leadTime:dhms',
+        'PRLeadTime:dhms',
+        'leadTime:seconds',
+        'PRLeadTime:seconds',
+        'firstCommittedAt',
+        'PROpenedAt',
+        'firstReviewedAt',
+        'lastApprovedReviewedAt',
+        'mergedAt',
+        'additions',
+        'deletions',
+        'modifiedLines',
+        'isEpic',
+    ];
+    csvDataArray.unshift(header);
+
+    writeToSheet(csvDataArray, 'dashboard-' + sheetName, destinationSpreadsheetId);
+}
+
 function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
     // leadTimeで降順に並べ替える
     pullRequests.sort((a, b) => b.getLeadTime() - a.getLeadTime());

@@ -12,7 +12,7 @@ function main() {
             const pullRequests = fetchPullRequest(searchQuery.getQuery());
             iterationCounter++;
             if ( iterationCounter === (startDates.length - 1) || iterationCounter === startDates.length) {
-                writePullRequestsToSheet(pullRequests, startDate, query.teamName, query.destinationSpreadsheetId);
+                writeDashboardToSheet(pullRequests, startDate, query.teamName, query.destinationSpreadsheetId);
             }
             const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
             const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
@@ -44,6 +44,6 @@ function getMonthlyReport() {
     const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, exQuery.getStartDate(), exQuery.getEndDate(), exQuery.interval);
     const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
     summary.push(metricsSummaryCsvMapper.getCsvRowData());
-    writePullRequestsToSheet(pullRequests, exQuery.getStartDate(), 'dashboard-monthly-report', exQuery.destinationSpreadsheetId);
+    writeDashboardToSheet(pullRequests, exQuery.getStartDate(), 'monthly-report' , exQuery.destinationSpreadsheetId);
     writeToSheet(summary, 'metrics-data-monthly-report', exQuery.destinationSpreadsheetId);
 }
