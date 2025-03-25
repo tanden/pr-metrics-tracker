@@ -1,6 +1,6 @@
 class QueryFromSheet {
-    constructor(sheetName, initialDate, interval, githubQueryString, destinationSpreadsheetId, isSkipEpic) {
-        this.sheetName = sheetName;
+    constructor(teamName, initialDate, interval, githubQueryString, destinationSpreadsheetId, isSkipEpic) {
+        this.teamName = teamName;
         this.initialDate = initialDate;
         if (interval < 1) {
             throw new Error('interval must be greater than 0 but ' + interval + ' was given');

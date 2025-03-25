@@ -56,9 +56,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     ];
     csvDataArray.unshift(header);
 
-    const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' PRs of ' + sheetName;
-
-    writeToSheet(csvDataArray, pullRequestSheetName, destinationSpreadsheetId);
+    writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId);
 }
 
 function secondsToHms(seconds) {

@@ -12,7 +12,7 @@ function main() {
             const pullRequests = fetchPullRequest(searchQuery.getQuery());
             iterationCounter++;
             if ( iterationCounter === (startDates.length - 1) || iterationCounter === startDates.length) {
-                writePullRequestsToSheet(pullRequests, startDate, query.sheetName, query.destinationSpreadsheetId);
+                writePullRequestsToSheet(pullRequests, startDate, query.teamName, query.destinationSpreadsheetId);
             }
             const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
             const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
@@ -21,7 +21,7 @@ function main() {
             }
             summary.push(metricsSummaryCsvMapper.getCsvRowData());
         }
-        writeToSheet(summary, query.sheetName, query.destinationSpreadsheetId);
+        writeToSheet(summary, query.teamName, query.destinationSpreadsheetId);
     }
 }
 
