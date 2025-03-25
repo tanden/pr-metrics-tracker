@@ -19,9 +19,9 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
             pr.branchName,
             pr.url,
             secondsToHms(pr.getLeadTime()),
+            pr.getLeadTime(),
             pr.firstCommittedAt,
             pr.mergedAt,
-            pr.isEpic(),
         ];
     });
 
@@ -32,9 +32,9 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
         'branchName',
         'url',
         'leadTime:dhms',
+        'leadTime:seconds',
         'firstCommittedAt',
         'mergedAt',
-        'isEpic',
     ];
     csvDataArray.unshift(header);
 
