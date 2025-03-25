@@ -34,7 +34,8 @@ class QueryFromSheet {
     getEndDate() {
         const startDate = new Date(this.initialDate);
         const endDate = new Date(startDate);
-        return endDate.setDate(endDate.getDate() + (this.interval - 1));
+        endDate.setDate(endDate.getDate() + (this.interval - 1));
+        return endDate;
     }
 
     getIsSkipEpic() {
