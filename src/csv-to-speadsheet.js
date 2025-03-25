@@ -27,7 +27,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
         'タイトル',
         'リポジトリ',
         'ブランチ',
-        'リードタイム:dhm',
+        'リードタイム',
         'リードタイム:秒',
         '最初にコミットした日時',
         'マージされた日時',
