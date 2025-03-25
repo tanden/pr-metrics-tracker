@@ -15,6 +15,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
     const csvDataArray = pullRequests.map((pr) => {
         return [
             pr.title,
+            pr.author,
             pr.repositoryName,
             `=HYPERLINK("${pr.url}", "${pr.branchName}")`,
             secondsToDhm(pr.getLeadTime()),
@@ -26,6 +27,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
 
     const header = [
         'タイトル',
+        '作成者',
         'リポジトリ',
         'ブランチ',
         'リードタイム',
