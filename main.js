@@ -1,5 +1,5 @@
 function main() {
-    const queries = getQueriesFromSheet('query');
+    const queries = getQueriesFromSheet('query-by-team');
     for (let query of queries) {
         const startDates = query.getStartDates();
         const summary = [];
@@ -21,7 +21,7 @@ function main() {
             }
             summary.push(metricsSummaryCsvMapper.getCsvRowData());
         }
-        writeToSheet(summary, query.teamName, query.destinationSpreadsheetId);
+        writeToSheet(summary, 'metrics-data-' + query.teamName, query.destinationSpreadsheetId);
     }
 }
 
