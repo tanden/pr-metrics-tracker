@@ -26,7 +26,7 @@ function main() {
 }
 
 function getMonthlyReport() {
-    const queries = getQueriesFromSheet('query');
+    const queries = getQueriesFromSheet('query-monthly-report');
     const summary = [];
     summary.push(getCsvHeader());
     const pullRequests = [];
@@ -44,6 +44,6 @@ function getMonthlyReport() {
     const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, exQuery.getStartDate(), exQuery.getEndDate(), exQuery.interval);
     const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
     summary.push(metricsSummaryCsvMapper.getCsvRowData());
-    writePullRequestsToSheet(pullRequests, exQuery.getStartDate(), exQuery.sheetName, exQuery.destinationSpreadsheetId);
-    writeToSheet(summary, exQuery.sheetName + '_monthly_report', exQuery.destinationSpreadsheetId);
+    writePullRequestsToSheet(pullRequests, exQuery.getStartDate(), 'dashboard-monthly-report', exQuery.destinationSpreadsheetId);
+    writeToSheet(summary, 'metrics-data-monthly-report', exQuery.destinationSpreadsheetId);
 }
