@@ -1,5 +1,5 @@
 function main() {
-    const queries = getQueriesFromSheet();
+    const queries = getQueriesFromSheet('query');
     for (let query of queries) {
         const startDates = query.getStartDates();
         const summary = [];
@@ -26,7 +26,7 @@ function main() {
 }
 
 function getMonthlyReport() {
-    const queries = getQueriesFromSheet();
+    const queries = getQueriesFromSheet('query');
     const summary = [];
     summary.push(getCsvHeader());
     const pullRequests = [];
