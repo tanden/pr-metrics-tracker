@@ -1,11 +1,11 @@
-function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId) {
+function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId, startLine) {
     const spreadSheet = SpreadsheetApp.openById(destinationSpreadsheetId);
     let sheet = spreadSheet.getSheetByName(sheetName);
     if (!sheet) {
         sheet = spreadSheet.insertSheet(sheetName);
     }
     sheet.clear();
-    sheet.getRange(1, 1, csvDataArray.length, csvDataArray[0].length).setValues(csvDataArray);
+    sheet.getRange(startLine, 1, csvDataArray.length, csvDataArray[0].length).setValues(csvDataArray);
 }
 
 function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
@@ -38,7 +38,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
     ];
     csvDataArray.unshift(header);
 
-    writeToSheet(csvDataArray, 'dashboard-' + sheetName, destinationSpreadsheetId);
+    writeToSheet(csvDataArray, 'dashboard-' + sheetName, destinationSpreadsheetId, 30);
 }
 
 function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
@@ -89,7 +89,7 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     ];
     csvDataArray.unshift(header);
 
-    writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId);
+    writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId, 1);
 }
 
 function secondsToHms(seconds) {
