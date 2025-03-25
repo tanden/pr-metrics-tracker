@@ -1,11 +1,43 @@
-function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId) {
+function writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId, startLine) {
     const spreadSheet = SpreadsheetApp.openById(destinationSpreadsheetId);
     let sheet = spreadSheet.getSheetByName(sheetName);
     if (!sheet) {
         sheet = spreadSheet.insertSheet(sheetName);
     }
     sheet.clear();
-    sheet.getRange(1, 1, csvDataArray.length, csvDataArray[0].length).setValues(csvDataArray);
+    sheet.getRange(startLine, 1, csvDataArray.length, csvDataArray[0].length).setValues(csvDataArray);
+    sheet.getRange(startLine, 1, 1, csvDataArray[0].length).setBackgroundColor('#ADD8E6');
+}
+
+function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
+    // leadTimeで降順に並べ替える
+    pullRequests.sort((a, b) => b.getLeadTime() - a.getLeadTime());
+    const csvDataArray = pullRequests.map((pr) => {
+        return [
+            pr.title,
+            pr.author,
+            pr.repositoryName,
+            `=HYPERLINK("${pr.url}", "${pr.branchName}")`,
+            secondsToDhm(pr.getLeadTime()),
+            pr.getLeadTime(),
+            getFormattedDateTime(new Date(pr.firstCommittedAt)),
+            getFormattedDateTime(new Date(pr.mergedAt)),
+        ];
+    });
+
+    const header = [
+        'タイトル',
+        '作成者',
+        'リポジトリ',
+        'ブランチ',
+        'リードタイム',
+        'リードタイム:秒',
+        '最初にコミットした日時',
+        'マージされた日時',
+    ];
+    csvDataArray.unshift(header);
+
+    writeToSheet(csvDataArray, 'dashboard-' + sheetName, destinationSpreadsheetId, 30);
 }
 
 function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
@@ -18,8 +50,8 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
             pr.baseBranchName,
             pr.branchName,
             pr.url,
-            secondsToHms(pr.getLeadTime()),
-            secondsToHms(pr.getPRLeadTime()),
+            secondsToDhm(pr.getLeadTime()),
+            secondsToDhm(pr.getPRLeadTime()),
             pr.getLeadTime(),
             pr.getPRLeadTime(),
             pr.firstCommittedAt,
@@ -56,37 +88,49 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     ];
     csvDataArray.unshift(header);
 
-    const pullRequestSheetName = getFormattedDate(new Date(startDate)) + ' PRs of ' + sheetName;
-
-    writeToSheet(csvDataArray, pullRequestSheetName, destinationSpreadsheetId);
+    writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId, 1);
 }
 
-function secondsToHms(seconds) {
+function secondsToDhm(seconds) {
     const d = Math.floor(seconds / 86400);
     const h = Math.floor(seconds % 86400 / 3600);
     const m = Math.floor(seconds % 3600 / 60);
-    const s = Math.floor(seconds % 3600 % 60);
 
     const dDisplay = d > 0 ? d + 'd ' : '';
     const hDisplay = h > 0 ? h + 'h ' : '';
     const mDisplay = m > 0 ? m + 'm ' : '';
-    const sDisplay = s > 0 ? s + 's ' : '';
 
-    return dDisplay + hDisplay + mDisplay + sDisplay;
+    return dDisplay + hDisplay + mDisplay;
 }
 
 function getFormattedDate(date) {
-    day = String(date.getDate());
+    let day = String(date.getDate());
     if (day.length < 2) {
         day = '0' + day;
     }
 
-    month = String(date.getMonth() + 1);
+    let month = String(date.getMonth() + 1);
     if (month.length < 2) {
         month = '0' + month;
     }
 
-    year = date.getFullYear();
+    const year = date.getFullYear();
 
     return [year, month, day].join('/');
+}
+
+function getFormattedDateTime(date) {
+    const formattedDate = getFormattedDate(date);
+
+    let hours = String(date.getHours());
+    if (hours.length < 2) {
+        hours = '0' + hours;
+    }
+
+    let minutes = String(date.getMinutes());
+    if (minutes.length < 2) {
+        minutes = '0' + minutes;
+    }
+
+    return formattedDate + ' ' + [hours, minutes].join(':');
 }
