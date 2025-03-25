@@ -15,10 +15,8 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
         return [
             pr.title,
             pr.repositoryName,
-            pr.baseBranchName,
-            pr.branchName,
-            pr.url,
-            secondsToHms(pr.getLeadTime()),
+            `=HYPERLINK("${pr.url}", "${pr.branchName}")`,
+            secondsToDhm(pr.getLeadTime()),
             pr.getLeadTime(),
             pr.firstCommittedAt,
             pr.mergedAt,
@@ -26,15 +24,13 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
     });
 
     const header = [
-        'title',
-        'repositoryName',
-        'baseBranchName',
-        'branchName',
-        'url',
-        'leadTime:dhms',
-        'leadTime:seconds',
-        'firstCommittedAt',
-        'mergedAt',
+        'タイトル',
+        'リポジトリ',
+        'ブランチ',
+        'リードタイム:dhm',
+        'リードタイム:秒',
+        '最初にコミットした日時',
+        'マージされた日時',
     ];
     csvDataArray.unshift(header);
 
@@ -92,18 +88,16 @@ function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinatio
     writeToSheet(csvDataArray, sheetName, destinationSpreadsheetId, 1);
 }
 
-function secondsToHms(seconds) {
+function secondsToDhm(seconds) {
     const d = Math.floor(seconds / 86400);
     const h = Math.floor(seconds % 86400 / 3600);
     const m = Math.floor(seconds % 3600 / 60);
-    const s = Math.floor(seconds % 3600 % 60);
 
     const dDisplay = d > 0 ? d + 'd ' : '';
     const hDisplay = h > 0 ? h + 'h ' : '';
     const mDisplay = m > 0 ? m + 'm ' : '';
-    const sDisplay = s > 0 ? s + 's ' : '';
 
-    return dDisplay + hDisplay + mDisplay + sDisplay;
+    return dDisplay + hDisplay + mDisplay;
 }
 
 function getFormattedDate(date) {
