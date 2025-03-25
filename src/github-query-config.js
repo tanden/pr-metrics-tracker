@@ -1,6 +1,6 @@
-function getQueriesFromSheet() {
+function getQueriesFromSheet(querySheetName) {
     const sheetId = getQuerySheetId();
-    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName('query');
+    const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(querySheetName);
     const dataRange = sheet.getDataRange();
     const rawData = dataRange.getValues();
     rawData.shift(); // remove header
