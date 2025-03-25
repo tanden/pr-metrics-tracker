@@ -18,8 +18,8 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
             `=HYPERLINK("${pr.url}", "${pr.branchName}")`,
             secondsToDhm(pr.getLeadTime()),
             pr.getLeadTime(),
-            pr.firstCommittedAt,
-            pr.mergedAt,
+            getFormattedDateTime(new Date(pr.firstCommittedAt)),
+            getFormattedDateTime(new Date(pr.mergedAt)),
         ];
     });
 
@@ -101,17 +101,33 @@ function secondsToDhm(seconds) {
 }
 
 function getFormattedDate(date) {
-    day = String(date.getDate());
+    let day = String(date.getDate());
     if (day.length < 2) {
         day = '0' + day;
     }
 
-    month = String(date.getMonth() + 1);
+    let month = String(date.getMonth() + 1);
     if (month.length < 2) {
         month = '0' + month;
     }
 
-    year = date.getFullYear();
+    const year = date.getFullYear();
 
     return [year, month, day].join('/');
+}
+
+function getFormattedDateTime(date) {
+    const formattedDate = getFormattedDate(date);
+
+    let hours = String(date.getHours());
+    if (hours.length < 2) {
+        hours = '0' + hours;
+    }
+
+    let minutes = String(date.getMinutes());
+    if (minutes.length < 2) {
+        minutes = '0' + minutes;
+    }
+
+    return formattedDate + ' ' + [hours, minutes].join(':');
 }
