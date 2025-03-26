@@ -19,6 +19,7 @@ class QueryFromSheet {
         for (let currentDate = startDate; currentDate <= today; currentDate.setDate(currentDate.getDate() + this.interval)) {
             dates.push(new Date(currentDate));
         }
+        dates.pop();
 
         return dates;
     }
