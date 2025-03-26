@@ -1,4 +1,4 @@
-function main() {
+function fetchData() {
     const queries = getQueriesFromSheet('query-by-team');
     for (let query of queries) {
         const startDates = query.getStartDates();
@@ -6,14 +6,9 @@ function main() {
         const interval = query.interval;
         const queryFromSheet = query.githubQueryString;
         const isSkipEpic = query.getIsSkipEpic();
-        let iterationCounter = 0;
         for (let startDate of startDates) {
             const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
             const pullRequests = fetchPullRequest(searchQuery.getQuery());
-            iterationCounter++;
-            if ( iterationCounter === (startDates.length - 1) || iterationCounter === startDates.length) {
-                writeDashboardToSheet(pullRequests, startDate, query.teamName, query.destinationSpreadsheetId);
-            }
             const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
             const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
             if (summary.length === 0) {
@@ -21,7 +16,25 @@ function main() {
             }
             summary.push(metricsSummaryCsvMapper.getCsvRowData());
         }
-        writeToSheet(summary, 'metrics-data-' + query.teamName, query.destinationSpreadsheetId, 1);
+        writeToSheet(summary, query.teamName + ' メトリクスデータ', getDashboardSheetId(), 1);
+    }
+}
+
+function createDashboard() {
+    const queries = getQueriesFromSheet('query-by-team');
+    for (let query of queries) {
+        const lastStartDate = query.getSecondToLastStartDate();
+        const interval = query.interval;
+        const queryFromSheet = query.githubQueryString;
+        const searchQuery = new SearchQuery(lastStartDate, interval, queryFromSheet);
+        const pullRequests = fetchPullRequest(searchQuery.getQuery());
+        const isSkipEpic = query.getIsSkipEpic();
+
+        if (isSkipEpic) {
+            writeDashboardToSheet(pullRequests.filter(pr => pr.isNotEpic()), lastStartDate, query.teamName, getDashboardSheetId());
+        } else {
+            writeDashboardToSheet(pullRequests, lastStartDate, query.teamName, getDashboardSheetId());
+        }
     }
 }
 
@@ -44,6 +57,6 @@ function getMonthlyReport() {
     const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, exQuery.getStartDate(), exQuery.getEndDate(), exQuery.interval);
     const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
     summary.push(metricsSummaryCsvMapper.getCsvRowData());
-    writeDashboardToSheet(pullRequests, exQuery.getStartDate(), 'monthly-report' , exQuery.destinationSpreadsheetId);
-    writeToSheet(summary, 'metrics-data-monthly-report', exQuery.destinationSpreadsheetId, 1);
+    writeDashboardToSheet(pullRequests, exQuery.getStartDate(), 'monthly-report' , getDashboardSheetId());
+    writeToSheet(summary, 'metrics-data-monthly-report', getDashboardSheetId(), 1);
 }
