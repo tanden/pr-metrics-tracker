@@ -26,6 +26,21 @@ class QueryFromSheet {
         return dates;
     }
 
+    getSecondToLastStartDate() {
+        const startDate = new Date(this.initialDate);
+        const today = new Date();
+        const dates = [];
+
+        for (let currentDate = startDate; currentDate <= today; currentDate.setDate(currentDate.getDate() + this.interval)) {
+            dates.push(new Date(currentDate));
+        }
+        if (dates.length > 1) {
+            return dates[dates.length - 2];
+        } else {
+            return dates[0];
+        }
+    }
+
     getStartDateAsArray() {
         return [new Date(this.initialDate)];
     }

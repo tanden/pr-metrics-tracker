@@ -20,30 +20,21 @@ function fetchData() {
     }
 }
 
-function main() {
+function createDashboard() {
     const queries = getQueriesFromSheet('query-by-team');
     for (let query of queries) {
-        const startDates = query.getStartDates();
-        const summary = [];
+        const lastStartDate = query.getSecondToLastStartDate();
         const interval = query.interval;
         const queryFromSheet = query.githubQueryString;
+        const searchQuery = new SearchQuery(lastStartDate, interval, queryFromSheet);
+        const pullRequests = fetchPullRequest(searchQuery.getQuery());
         const isSkipEpic = query.getIsSkipEpic();
-        let iterationCounter = 0;
-        for (let startDate of startDates) {
-            const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
-            const pullRequests = fetchPullRequest(searchQuery.getQuery());
-            iterationCounter++;
-            if ( iterationCounter === (startDates.length - 1) || iterationCounter === startDates.length) {
-                writeDashboardToSheet(pullRequests, startDate, query.teamName, query.destinationSpreadsheetId);
-            }
-            const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
-            const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
-            if (summary.length === 0) {
-                summary.push(getCsvHeader());
-            }
-            summary.push(metricsSummaryCsvMapper.getCsvRowData());
+
+        if (isSkipEpic) {
+            writeDashboardToSheet(pullRequests.filter(pr => pr.isNotEpic()), lastStartDate, query.teamName, query.destinationSpreadsheetId);
+        } else {
+            writeDashboardToSheet(pullRequests, lastStartDate, query.teamName, query.destinationSpreadsheetId);
         }
-        writeToSheet(summary, 'metrics-data-' + query.teamName, query.destinationSpreadsheetId, 1);
     }
 }
 
