@@ -19,7 +19,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
             pr.repositoryName,
             `=HYPERLINK("${pr.url}", "${pr.branchName}")`,
             secondsToDhm(pr.getLeadTime()),
-            pr.getLeadTime(),
+            pr.getLeadTimeInDays(),
             getFormattedDateTime(new Date(pr.firstCommittedAt)),
             getFormattedDateTime(new Date(pr.mergedAt)),
         ];
@@ -31,7 +31,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
         'リポジトリ',
         'ブランチ',
         'リードタイム',
-        'リードタイム:秒',
+        'リードタイム:日数',
         '最初にコミットした日時',
         'マージされた日時',
     ];

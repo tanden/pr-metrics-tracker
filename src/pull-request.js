@@ -78,6 +78,32 @@ class PullRequest {
         return this.milliToSeconds(duration);
     }
 
+    getLeadTimeInDays() {
+        const leadtime = this.getLeadTime();
+        if (leadtime < 86400) {
+            return '1日未満';
+        }
+        if (leadtime < 172800) {
+            return '1日';
+        }
+        if (leadtime < 259200) {
+            return '2日';
+        }
+        if (leadtime < 345600) {
+            return '3日';
+        }
+        if (leadtime < 432000) {
+            return '4日';
+        }
+        if (leadtime < 518400) {
+            return '5日';
+        }
+        if (leadtime < 604800) {
+            return '6日';
+        }
+        return '1週間以上';
+    }
+
     // PRが作成されてからマージされるまでの時間を取得する
     getPRLeadTime() {
         const duration = new Date(this.mergedAt) - new Date(this.createdAt);
