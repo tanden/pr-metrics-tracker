@@ -17,7 +17,7 @@ function getWeekends(startDate, endDate) {
 
 
 function getJapaneseHolidayCount(startDate, endDate) {
-    const calendarId = 'japanese__ja@holiday.calendar.google.com';
+    const calendarId = 'ja.japanese.official#holiday@group.v.calendar.google.com';
 
     const events = Calendar.Events.list(calendarId, {
         timeMin: startDate.toISOString(),
