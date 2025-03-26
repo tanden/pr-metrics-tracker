@@ -16,7 +16,7 @@ function fetchData() {
             }
             summary.push(metricsSummaryCsvMapper.getCsvRowData());
         }
-        writeToSheet(summary, query.teamName + ' メトリクスデータ', getDataSheetId(), 1);
+        writeToSheet(summary, query.teamName + ' メトリクスデータ', getDashboardSheetId(), 1);
     }
 }
 
@@ -58,5 +58,5 @@ function getMonthlyReport() {
     const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
     summary.push(metricsSummaryCsvMapper.getCsvRowData());
     writeDashboardToSheet(pullRequests, exQuery.getStartDate(), 'monthly-report' , getDashboardSheetId());
-    writeToSheet(summary, 'metrics-data-monthly-report', getDataSheetId(), 1);
+    writeToSheet(summary, 'metrics-data-monthly-report', getDashboardSheetId(), 1);
 }

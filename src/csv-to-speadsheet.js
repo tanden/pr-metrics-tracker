@@ -37,7 +37,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
     ];
     csvDataArray.unshift(header);
 
-    writeToSheet(csvDataArray, sheetName + ' ダッシュボード', destinationSpreadsheetId, 30);
+    writeToSheet(csvDataArray, sheetName + ' ダッシュボード', destinationSpreadsheetId, 40);
 }
 
 function writePullRequestsToSheet(pullRequests, startDate, sheetName, destinationSpreadsheetId) {
