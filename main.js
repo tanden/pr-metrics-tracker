@@ -1,3 +1,25 @@
+function fetchData() {
+    const queries = getQueriesFromSheet('query-by-team');
+    for (let query of queries) {
+        const startDates = query.getStartDates();
+        const summary = [];
+        const interval = query.interval;
+        const queryFromSheet = query.githubQueryString;
+        const isSkipEpic = query.getIsSkipEpic();
+        for (let startDate of startDates) {
+            const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
+            const pullRequests = fetchPullRequest(searchQuery.getQuery());
+            const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, searchQuery.startDate, searchQuery.endDate, searchQuery.interval);
+            const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
+            if (summary.length === 0) {
+                summary.push(getCsvHeader());
+            }
+            summary.push(metricsSummaryCsvMapper.getCsvRowData());
+        }
+        writeToSheet(summary, query.teamName + ' メトリクスデータ', query.destinationSpreadsheetId, 1);
+    }
+}
+
 function main() {
     const queries = getQueriesFromSheet('query-by-team');
     for (let query of queries) {
