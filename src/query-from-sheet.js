@@ -1,5 +1,5 @@
 class QueryFromSheet {
-    constructor(teamName, initialDate, interval, githubQueryString, destinationSpreadsheetId, isSkipEpic) {
+    constructor(teamName, initialDate, interval, githubQueryString, isSkipEpic) {
         this.teamName = teamName;
         this.initialDate = initialDate;
         if (interval < 1) {
@@ -7,8 +7,8 @@ class QueryFromSheet {
         }
         this.interval = interval;
         this.githubQueryString = githubQueryString;
-        this.destinationSpreadsheetId = destinationSpreadsheetId;
         this.isSkipEpic = isSkipEpic;
+        this.startDate = new Date(initialDate);
     }
 
     getStartDates() {
