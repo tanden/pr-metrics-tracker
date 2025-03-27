@@ -1,3 +1,11 @@
+function onOpen() {
+    const ui = SpreadsheetApp.getUi();
+    ui.createMenu('カスタムメニュー')
+      .addItem('データを取得', 'fetchData')
+      .addItem('ダッシュボードを作成', 'createDashboard')
+      .addToUi();
+  }
+
 function fetchData() {
     const queries = getQueriesFromSheet('query-by-team');
     for (let query of queries) {
