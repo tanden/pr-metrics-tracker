@@ -1,10 +1,10 @@
 function onOpen() {
     const ui = SpreadsheetApp.getUi();
     ui.createMenu('カスタムメニュー')
-      .addItem('データを取得', 'fetchData')
-      .addItem('ダッシュボードを作成', 'createDashboard')
-      .addToUi();
-  }
+        .addItem('データを取得', 'fetchData')
+        .addItem('ダッシュボードを作成', 'createDashboard')
+        .addToUi();
+}
 
 function fetchData() {
     const queries = getQueriesFromSheet('query-by-team');
@@ -46,25 +46,52 @@ function createDashboard() {
     }
 }
 
-function getMonthlyReport() {
-    const queries = getQueriesFromSheet('query-monthly-report');
-    const summary = [];
-    summary.push(getCsvHeader());
-    const pullRequests = [];
-    for (let query of queries) {
-        const startDates = query.getStartDateAsArray();
-        const interval = query.interval;
-        const queryFromSheet = query.githubQueryString;
-        for (let startDate of startDates) {
-            const searchQuery = new SearchQuery(startDate, interval, queryFromSheet);
-            pullRequests.push(...fetchPullRequest(searchQuery.getQuery()));
+function createMonthlyReport() {
+    const queries = getMonthlyReportQueryFromSheet('query-monthly-report');
+    let previousQueryTeamName = '';
+    const setOfPullRequests = [];
+    let pullRequests = {};
+    queries.forEach((query, index) => {
+        const dates = query.getDates();
+        
+        if (previousQueryTeamName && previousQueryTeamName !== query.teamName) {
+            setOfPullRequests[previousQueryTeamName] = pullRequests;
+            pullRequests = {};
         }
+        dates.forEach(([startDate, interval]) => {
+            const searchQuery = new SearchQuery(startDate, interval, query.githubQueryString);
+            const fetchedPullRequests = fetchPullRequest(searchQuery.getQuery());
+
+            if (pullRequests[startDate]) {
+              const existing = pullRequests[startDate];
+              existing.addPullRequests(fetchedPullRequests);
+              pullRequests[startDate] = existing;
+            } else {
+              pullRequests[startDate] = new MonthlyPullRequests(fetchedPullRequests, startDate, interval);
+            }
+        });
+
+        previousQueryTeamName = query.teamName;
+
+        if (index === queries.length - 1) {
+            setOfPullRequests[previousQueryTeamName] = pullRequests;
+        }
+    });
+
+    for (const [teamName, pullRequests] of Object.entries(setOfPullRequests)) {
+        const isSkipEpic = true;
+        const summary = [];
+        let latestPullRequests;
+        for (const [startDate, monthlyPullRequests] of Object.entries(pullRequests)) {
+            const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, monthlyPullRequests.pullRequests, monthlyPullRequests.startDate, monthlyPullRequests.getEndDate(), monthlyPullRequests.interval);
+            const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
+            if (summary.length === 0) {
+                summary.push(getCsvHeader());
+            }
+            summary.push(metricsSummaryCsvMapper.getCsvRowData());
+            latestPullRequests = monthlyPullRequests;
+        }
+        writeDashboardToSheet(latestPullRequests.pullRequests, latestPullRequests.startDate, `${teamName} マンスリーレポート`, getDashboardSheetId());
+        writeToSheet(summary, `${teamName} マンスリーレポート データ`, getDashboardSheetId(), 1);
     }
-    const isSkipEpic = true;
-    const exQuery = queries[0];
-    const pullRequestMetricsSummary = PullRequestMetricsSummaryFactory.create(isSkipEpic, pullRequests, exQuery.getStartDate(), exQuery.getEndDate(), exQuery.interval);
-    const metricsSummaryCsvMapper = new MetricsSummaryCsvMapper(pullRequestMetricsSummary);
-    summary.push(metricsSummaryCsvMapper.getCsvRowData());
-    writeDashboardToSheet(pullRequests, exQuery.getStartDate(), 'monthly-report' , getDashboardSheetId());
-    writeToSheet(summary, 'metrics-data-monthly-report', getDashboardSheetId(), 1);
 }
