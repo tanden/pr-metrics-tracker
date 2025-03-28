@@ -22,6 +22,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
             pr.getLeadTimeInDays(),
             getFormattedDateTime(new Date(pr.firstCommittedAt)),
             getFormattedDateTime(new Date(pr.mergedAt)),
+            pr.getLabels().join(','),
         ];
     });
 
@@ -34,6 +35,7 @@ function writeDashboardToSheet(pullRequests, startDate, sheetName, destinationSp
         'リードタイム:日数',
         '最初にコミットした日時',
         'マージされた日時',
+        'ラベル',
     ];
     csvDataArray.unshift(header);
 
