@@ -169,7 +169,7 @@ class PullRequest {
     getLabels() {
         const incidentOrEnhancement = this.labels
             .map(label => label.name)
-            .filter(name => name === 'incident' || name === 'enhancement');
+            .filter(name => name === 'incident' || name === 'enhancement' || name === 'cs_q');
 
         if (incidentOrEnhancement.length > 0) {
             return incidentOrEnhancement;
