@@ -1,6 +1,7 @@
 class PullRequest {
     constructor(
         title,
+        labels,
         baseRefName,
         headRefName,
         author,
@@ -15,6 +16,7 @@ class PullRequest {
         mergedAt
     ) {
         this.title = title;
+        this.labels = labels;
         this.baseBranchName = baseRefName;
         this.branchName = headRefName;
         this.author = author;
@@ -162,5 +164,17 @@ class PullRequest {
 
     isNotEpic() {
         return !this.isEpic();
+    }
+
+    getLabels() {
+        const incidentOrEnhancement = this.labels
+            .map(label => label.name)
+            .filter(name => name === 'incident' || name === 'enhancement');
+
+        if (incidentOrEnhancement.length > 0) {
+            return incidentOrEnhancement;
+        } else {
+            return ['other'];
+        }
     }
 }

@@ -14,6 +14,11 @@ function fetchPullRequest(searchQuery) {
           nodes {
             ... on PullRequest {
               title
+              labels(first: 10) {
+                nodes {
+                  name
+                }
+              }
               baseRefName
               headRefName
               author {
@@ -80,6 +85,7 @@ function fetchPullRequest(searchQuery) {
             .map((pr) =>
                 new PullRequest(
                     pr.title,
+                    pr.labels.nodes,
                     pr.baseRefName,
                     pr.headRefName,
                     pr.author?.login,
